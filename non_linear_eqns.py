@@ -1,11 +1,12 @@
 import math
 import matplotlib.pyplot as plt
 
+# Function for bisection method
 def bisection_method(f, a, b, epsilon, max_iterations):
     if f(a) * f(b) >= 0:
         print("Bisection method may not converge on the given interval.")
         return None, -1
-
+    
     c = a
     f_values = []
     relative_errors = []
@@ -13,26 +14,27 @@ def bisection_method(f, a, b, epsilon, max_iterations):
         c = (a + b) / 2
         f_c = f(c)
         f_values.append(f_c)
-
+        
         if i > 0:
             relative_error = abs((c - prev_c) / c)
             relative_errors.append(relative_error)
             if relative_error < epsilon:
                 return c, 1, f_values, relative_errors
-
+        
         if abs(f_c) < epsilon:
             return c, 2, f_values, relative_errors
-
+        
         if f_c * f(a) < 0:
             b = c
         else:
             a = c
-
+        
         prev_c = c
-
+    
     print("Bisection method did not converge within the maximum number of iterations.")
     return None, 0, f_values, relative_errors
 
+# Function for fixed-point method
 def fixed_point_method(g, x0, epsilon, max_iterations):
     x = x0
     f_values = []
@@ -41,21 +43,22 @@ def fixed_point_method(g, x0, epsilon, max_iterations):
         x_new = g(x)
         f_val = abs(x_new - x)
         f_values.append(f_val)
-
+        
         if i > 0:
             relative_error = abs((x_new - x) / x_new)
             relative_errors.append(relative_error)
             if relative_error < epsilon:
                 return x_new, 1, f_values, relative_errors
-
+        
         if f_val < epsilon:
             return x_new, 2, f_values, relative_errors
-
+        
         x = x_new
-
+    
     print("Fixed-point method did not converge within the maximum number of iterations.")
     return None, 0, f_values, relative_errors
 
+# Function for Newton-Raphson method
 def newton_raphson_method(f, f_prime, x0, epsilon, max_iterations):
     x = x0
     f_values = []
@@ -64,30 +67,26 @@ def newton_raphson_method(f, f_prime, x0, epsilon, max_iterations):
         f_val = f(x)
         f_prime_val = f_prime(x)
         f_values.append(abs(f_val))
-
+        
         if i > 0:
             relative_error = abs((x - prev_x) / x)
             relative_errors.append(relative_error)
             if relative_error < epsilon:
                 return x, 1, f_values, relative_errors
-
+        
         if abs(f_val) < epsilon:
             return x, 2, f_values, relative_errors
-
+        
         if f_prime_val == 0:
             print("Newton-Raphson method failed due to zero derivative.")
             return None, 0, f_values, relative_errors
-
+        
         x -= f_val / f_prime_val
-
+        
         prev_x = x
-
+    
     print("Newton-Raphson method did not converge within the maximum number of iterations.")
     return None, 0, f_values, relative_errors
-
-# Rest of the code...
-
-
 
 # Test function 1: f(x) = x - cos(x)
 def equation1(x):
@@ -120,11 +119,11 @@ choice = int(input("Enter your choice: "))
 
 if choice == 1:
     f = equation1
-    a = 0
-    b = 1
+    a = float(input("Enter the starting point 'a': "))
+    b = float(input("Enter the starting point 'b': "))
 
-    epsilon = 0.01 / 100  # 0.01%
-    max_iterations = 50
+    epsilon = float(input("Enter the convergence criterion for relative approximate errors: ")) / 100
+    max_iterations = int(input("Enter the maximum number of iterations: "))
 
     root, flag, f_values, relative_errors = bisection_method(f, a, b, epsilon, max_iterations)
     if root is not None:
@@ -148,11 +147,11 @@ if choice == 1:
     plt.show()
 
 elif choice == 2:
-    g = math.cos
-    x0 = 0
+    g = equation1_derivative
+    x0 = float(input("Enter the starting point 'x0': "))
 
-    epsilon = 0.01 / 100  # 0.01%
-    max_iterations = 50
+    epsilon = float(input("Enter the convergence criterion for relative approximate errors: ")) / 100
+    max_iterations = int(input("Enter the maximum number of iterations: "))
 
     root, flag, f_values, relative_errors = fixed_point_method(g, x0, epsilon, max_iterations)
     if root is not None:
@@ -178,31 +177,9 @@ elif choice == 2:
 elif choice == 3:
     f = equation3
     f_prime = equation3_derivative
-    x0 = 1
+    x0 = float(input("Enter the starting point 'x0': "))
 
-    epsilon = 0.01 / 100  # 0.01%
-    max_iterations = 50
+    epsilon = float(input("Enter the convergence criterion for relative approximate errors: ")) / 100
+    max_iterations = int(input("Enter the maximum number of iterations: "))
 
-    root, flag, f_values, relative_errors = newton_raphson_method(f, f_prime, x0, epsilon, max_iterations)
-    if root is not None:
-        print("Root found: x =", root)
-        print("Stopping criteria flag:", flag)
-
-    # Plot f(x) vs. x
-    x_values = list(range(len(f_values)))
-    plt.plot(x_values, f_values)
-    plt.xlabel("Iteration Number")
-    plt.ylabel("f(x)")
-    plt.title("f(x) vs. x (Newton-Raphson Method)")
-    plt.show()
-
-    # Plot approximate relative error vs. iteration number
-    x_values = list(range(len(relative_errors)))
-    plt.plot(x_values, relative_errors)
-    plt.xlabel("Iteration Number")
-    plt.ylabel("Approximate Relative Error")
-    plt.title("Approximate Relative Error vs. Iteration Number (Newton-Raphson Method)")
-    plt.show()
-
-else:
-    print("Invalid choice. Exiting...")
+    root, flag, f_values, relative_errors = newton
